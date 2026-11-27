@@ -2,3 +2,10 @@
 .idea/
 local.properties
 **/build/
+/build/
+/dist/
+__pycache__/
+*.apk
+*.apk.idsig
+*.jks
+*.keystore

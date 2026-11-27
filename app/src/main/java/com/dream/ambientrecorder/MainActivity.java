@@ -60,6 +60,7 @@ public final class MainActivity extends Activity {
     private RecorderStyle style;
     private AudioArchive archive;
     private ClipPlayer player;
+    private UpdatesUi updates;
     private ClipAdapter adapter;
     private TextView marker;
     private TextView stateTitle;
@@ -86,6 +87,7 @@ public final class MainActivity extends Activity {
         style = new RecorderStyle(this);
         archive = new AudioArchive(getFilesDir());
         player = new ClipPlayer(this, this::renderPlayback, this::showMessage);
+        updates = new UpdatesUi(this, style, this::showMessage);
         pendingExport = state == null ? null : state.getString("pendingExport");
         setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
         setContentView(buildScreen());
@@ -101,12 +103,14 @@ public final class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        updates.resume();
         updateScreen();
     }
 
     @Override
     protected void onStop() {
         main.removeCallbacks(tick);
+        updates.pause();
         player.close();
         super.onStop();
     }
@@ -139,7 +143,13 @@ public final class MainActivity extends Activity {
 
         TextView title = style.text(30, TEXT, true);
         title.setText(R.string.app_name);
-        root.addView(title, new LinearLayout.LayoutParams(MATCH, WRAP));
+        LinearLayout header = new LinearLayout(this);
+        header.setGravity(Gravity.CENTER_VERTICAL);
+        header.addView(title, new LinearLayout.LayoutParams(0, WRAP, 1));
+        LinearLayout.LayoutParams updateButton = new LinearLayout.LayoutParams(WRAP, WRAP);
+        updateButton.setMarginStart(style.dp(8));
+        header.addView(updates.button(), updateButton);
+        root.addView(header, new LinearLayout.LayoutParams(MATCH, WRAP));
         root.addView(recorderPanel(), marginTop(16));
 
         TextView archiveTitle = style.text(23, TEXT, true);

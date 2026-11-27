@@ -1,7 +1,11 @@
 # Ambient Recorder
 
+Agent-generated project.
+
 Ambient Recorder records nearby sound while the phone is locked. It runs on
 Android 10 or later and stores recordings in private app storage.
+
+[Download the latest signed APK](https://github.com/AndreDon0/ambient-recorder/releases/latest).
 
 1. Open the app, tap **Start recording**, and grant microphone permission.
 2. To end the session, tap **Stop recording** in the app or its notification.
@@ -33,3 +37,32 @@ and an Android SDK with platform 35 and Build Tools 36.1.0.
 ```
 
 The development APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+
+## Updates
+
+**Updates** shows the installed version, download progress, and release notes.
+The app checks its GitHub update feed while open. Downloads default to Wi-Fi and
+resume when the app and an eligible connection return. Recording files remain
+on the phone. Stop recording before choosing **Install**, then confirm the
+upgrade in Android's installer.
+
+## Publish a version
+
+The app reads its version from `version.properties`. For subsequent releases,
+run `python3 scripts/release.py bump patch` (or `minor` or `major`), commit the
+version change, and push `main`.
+
+```sh
+./gradlew :app:assembleRelease
+python3 scripts/release.py sign app/build/outputs/apk/release/app-release-unsigned.apk \
+  dist/Ambient-Recorder-1.1.0.apk --keystore "$HOME/.android/debug.keystore"
+python3 scripts/release.py publish dist/Ambient-Recorder-1.1.0.apk --notes-file updates/1.1.0.md
+```
+
+Set `ANDROID_HOME` to the SDK path and authenticate GitHub CLI before publishing.
+The signing command requires the original key used for Ambient Recorder 1.0. It
+prompts locally for the password. You can also set `AMBIENT_STORE_PASSWORD` and
+`AMBIENT_KEY_PASSWORD` for noninteractive builds. The keystore stays local.
+
+The publisher verifies the APK, creates a versioned GitHub Release with the APK
+and its checksum, and pushes the update feed after the assets are available.

@@ -1,5 +1,11 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
+}
+
+val releaseVersion = Properties().apply {
+    rootProject.file("version.properties").inputStream().use { load(it) }
 }
 
 android {
@@ -11,8 +17,8 @@ android {
         applicationId = "com.dream.ambientrecorder"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = releaseVersion.getProperty("versionCode").toInt()
+        versionName = releaseVersion.getProperty("versionName")
     }
 
     compileOptions {

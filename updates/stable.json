@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "versionCode": 1,
+  "versionName": "1.0",
+  "minSdk": 29,
+  "size": 45555,
+  "sha256": "22fba966c84eec5bcda2eed69d50da8cd158b093ab7f74327f740be173a77f92",
+  "notes": {
+    "en": "Initial agent-generated release. Continuous recording, automatic audio format switching, and an on-device archive."
+  },
+  "url": "https://github.com/AndreDon0/ambient-recorder/releases/download/v1.0/Ambient-Recorder-1.0.apk"
+}
