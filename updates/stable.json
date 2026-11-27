@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "versionCode": 1,
-  "versionName": "1.0",
+  "versionCode": 2,
+  "versionName": "1.1.0",
   "minSdk": 29,
-  "size": 45555,
-  "sha256": "22fba966c84eec5bcda2eed69d50da8cd158b093ab7f74327f740be173a77f92",
+  "size": 2205047,
+  "sha256": "fa8f7f469531169415bb0422b169f6dacffb4f254490c4a6398e4299ae5c9e38",
   "notes": {
-    "en": "Initial agent-generated release. Continuous recording, automatic audio format switching, and an on-device archive."
+    "en": "- Added an in-app version manager with release notes and download progress.\n- Downloads use Wi-Fi by default and can resume when you reopen the app.\n- Android confirms installation after the app verifies the update package."
   },
-  "url": "https://github.com/AndreDon0/ambient-recorder/releases/download/v1.0/Ambient-Recorder-1.0.apk"
+  "url": "https://github.com/AndreDon0/ambient-recorder/releases/download/v1.1.0/Ambient-Recorder-1.1.0.apk"
 }
