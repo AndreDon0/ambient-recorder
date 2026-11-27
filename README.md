@@ -55,8 +55,8 @@ version change, and push `main`.
 ```sh
 ./gradlew :app:assembleRelease
 python3 scripts/release.py sign app/build/outputs/apk/release/app-release-unsigned.apk \
-  dist/Ambient-Recorder-1.1.0.apk --keystore "$HOME/.android/debug.keystore"
-python3 scripts/release.py publish dist/Ambient-Recorder-1.1.0.apk --notes-file updates/1.1.0.md
+  dist/Ambient-Recorder-1.2.0.apk --keystore "$HOME/.android/debug.keystore"
+python3 scripts/release.py publish dist/Ambient-Recorder-1.2.0.apk --notes-file updates/1.2.0.md
 ```
 
 Set `ANDROID_HOME` to the SDK path and authenticate GitHub CLI before publishing.
@@ -66,3 +66,27 @@ prompts locally for the password. You can also set `AMBIENT_STORE_PASSWORD` and
 
 The publisher verifies the APK, creates a versioned GitHub Release with the APK
 and its checksum, and pushes the update feed after the assets are available.
+
+## Sync recordings over Wi-Fi
+
+Open **Sync** next to **Recordings** to set up SFTP to a server on your local
+network. Enter the server's private IPv4 address, SSH username, absolute
+destination folder, and ECDSA host fingerprint. The server needs OpenSSH with
+SFTP enabled on port 22 and a destination folder writable by the SSH user.
+
+Run this on the server and enter the displayed `SHA256:…` value in the app.
+
+```sh
+ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub
+```
+
+Tap **Copy phone’s public key** and add it as one line to that user's
+`~/.ssh/authorized_keys`. To restrict the phone's key to SFTP, prefix the copied
+line with `restrict,command="internal-sftp" `. Use an SSH account whose file
+permissions are appropriate for the destination.
+
+Tap **Enable sync** to queue existing and future recordings. Android schedules
+the work on Wi-Fi, including when the app is closed. Uploads require a direct
+route to the server on that Wi-Fi network and a matching SSH fingerprint.
+Completed files keep their original names and formats. Files stay on the phone,
+and deleting a recording on the phone leaves its server copy in place.

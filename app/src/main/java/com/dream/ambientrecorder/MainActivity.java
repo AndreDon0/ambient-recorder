@@ -61,6 +61,7 @@ public final class MainActivity extends Activity {
     private AudioArchive archive;
     private ClipPlayer player;
     private UpdatesUi updates;
+    private SyncUi sync;
     private ClipAdapter adapter;
     private TextView marker;
     private TextView stateTitle;
@@ -88,12 +89,14 @@ public final class MainActivity extends Activity {
         archive = new AudioArchive(getFilesDir());
         player = new ClipPlayer(this, this::renderPlayback, this::showMessage);
         updates = new UpdatesUi(this, style, this::showMessage);
+        sync = new SyncUi(this, style, disk, this::showMessage);
         pendingExport = state == null ? null : state.getString("pendingExport");
         setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
         setContentView(buildScreen());
         disk.execute(() -> {
             try {
                 archive.recover();
+                SyncJobService.schedule(this);
             } catch (IOException error) {
                 runOnUiThread(() -> showMessage("Some unfinished recordings could not be recovered."));
             }
@@ -154,7 +157,11 @@ public final class MainActivity extends Activity {
 
         TextView archiveTitle = style.text(23, TEXT, true);
         archiveTitle.setText("Recordings");
-        root.addView(archiveTitle, marginTop(20));
+        LinearLayout archiveHeader = new LinearLayout(this);
+        archiveHeader.setGravity(Gravity.CENTER_VERTICAL);
+        archiveHeader.addView(archiveTitle, new LinearLayout.LayoutParams(0, WRAP, 1));
+        archiveHeader.addView(sync.button(), new LinearLayout.LayoutParams(WRAP, WRAP));
+        root.addView(archiveHeader, marginTop(16));
         storage = style.text(13, MUTED, false);
         root.addView(storage, marginTop(3));
 
@@ -309,6 +316,7 @@ public final class MainActivity extends Activity {
     }
 
     private void updateScreen() {
+        sync.refresh();
         RecordingService.Status status = RecordingService.status();
         renderCapture(status);
         if (player.ready() && !seeking) {

@@ -125,6 +125,7 @@ public final class RecordingService extends Service {
             AudioManager audio = getSystemService(AudioManager.class);
             boolean rawInput = "true".equals(audio.getProperty(AudioManager.PROPERTY_SUPPORT_AUDIO_SOURCE_UNPROCESSED));
             new CaptureEngine(archive, () -> !stopRequested, () -> mode, (interrupted, actualMode) -> main.post(() -> {
+                SyncJobService.schedule(this);
                 if (running && !stopRequested && !destroyed) {
                     if (interrupted) {
                         update(Phase.INTERRUPTED, actualMode, "Microphone unavailable. Waiting to resume.");
@@ -151,6 +152,7 @@ public final class RecordingService extends Service {
             String result = issue;
             Throwable cause = failure;
             main.post(() -> {
+                SyncJobService.schedule(this);
                 if (!destroyed) {
                     complete(result, cause);
                 }
