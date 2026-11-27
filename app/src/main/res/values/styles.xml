@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Ambient Recorder</string>
+
+    <plurals name="recordings">
+        <item quantity="one">%d recording</item>
+        <item quantity="other">%d recordings</item>
+    </plurals>
+
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#101512</item>
+        <item name="android:colorAccent">#CAF28A</item>
+        <item name="android:navigationBarColor">#101512</item>
+        <item name="android:statusBarColor">#101512</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>
