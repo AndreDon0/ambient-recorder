@@ -73,11 +73,11 @@ def sign(source, output, keystore, alias):
         signed = Path(directory) / "signed.apk"
         run(str(tools / "zipalign"), "-P", "16", "4", str(source), str(aligned))
         command = [str(tools / "apksigner"), "sign", "--ks", str(keystore), "--ks-key-alias", alias,
-                   "--v4-signing-enabled", "false", "--out", str(signed), str(aligned)]
+                   "--v4-signing-enabled", "false", "--out", str(signed)]
         for option, variable in (("--ks-pass", "AMBIENT_STORE_PASSWORD"), ("--key-pass", "AMBIENT_KEY_PASSWORD")):
             if variable in os.environ:
                 command.extend([option, "env:" + variable])
-        subprocess.run(command, cwd=ROOT, check=True)
+        subprocess.run([*command, str(aligned)], cwd=ROOT, check=True)
         verify_certificate(signed)
         output.write_bytes(signed.read_bytes())
     print(output)
